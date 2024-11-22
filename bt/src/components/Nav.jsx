@@ -1,9 +1,7 @@
 // rrd imports
 import { Form, NavLink } from "react-router-dom"
 
-// library
-import {TrashIcon} from '@heroicons/react'
-import {HomeIcon} from '@heroicons/react'
+
 // assets
 
 
@@ -32,7 +30,7 @@ const Nav = ({ userName }) => {
           >
             <button type="submit" className="btn btn--warning">
               <span>Delete User</span>
-              <TrashIcon width={20} />
+              
             </button>
 
           </Form>
