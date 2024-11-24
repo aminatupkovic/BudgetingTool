@@ -1,49 +1,33 @@
-import React from 'react'
+
 import { Form } from 'react-router-dom'
+import React, { useState } from 'react';
 
-function AddBudgetForm() {
+const AddBudgetForm = ({ onBudgetCreate }) => {
+  const [name, setName] = useState('');
+  const [amount, setAmount] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!name || !amount) return;
+    onBudgetCreate({ name, amount });
+    setName('');
+    setAmount('');
+  };
+
   return (
-    <div className='form-wrapper'>
-        <h2 className='h3'>
-            Create Budget
-        </h2>
-        <Form 
-        method="post"
-        className='grid-sm'
-        >
-            <div className='grid-xs'>
-                <label htmlFor='newBudget'>Budget Name</label>
-                <input 
-                type='text'
-                name='newBudget'
-                id='newBudget'
-                placeholder='e.g., Groceries'
-                required
-                />
-            </div>
-            <div className='grid-xs'>
-                <label htmlFor='newBudgetAmount'>Amount</label>
-                <input 
-                type='number'
-                step='0.01'
-                name='newBudgetAmount'
-                id='newBudgetAmount'
-                placeholder='e.g., $50'
-                required
-                inputMode='decimal'
-                />
-            </div>
-            <input
-            type='hidden'
-            name='_action'
-            value='createBudget'
-            />
-            <button type='submit' className='btn btn--dark'>
-                <span>Create Budget</span>
-            </button>
-        </Form>
-    </div>
-  )
-}
+    <form onSubmit={handleSubmit}>
+      <h2>Create a Budget</h2>
+      <div>
+        <label>Name</label>
+        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+      </div>
+      <div>
+        <label>Amount</label>
+        <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} required />
+      </div>
+      <button type="submit">Create Budget</button>
+    </form>
+  );
+};
 
-export default AddBudgetForm
+export default AddBudgetForm;

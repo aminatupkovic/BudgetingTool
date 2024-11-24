@@ -1,30 +1,51 @@
-// Local storage
-const generateRandomColor = () => {
-  const existingBudgetLength = fetchData("budgets")?.length ?? 0;
-  return '${existingBudgetLength * 34} 65% 50%'
-}
+import axios from 'axios';
 
-export const fetchData = (key) => {
-  return JSON.parse(localStorage.getItem(key));
+// Backend API URL
+const API_URL = 'http://localhost:8080/api';
+
+// Function to fetch data (GET request)
+export const fetchData = async (url) => {
+  try {
+    const response = await axios.get(`${API_URL}${url}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
 };
 
-// delete item
-export const deleteItem = ({ key }) => {
-  return localStorage.removeItem(key)
-}
-
-export const createBudget = ({
-  name, amount
-}) => {
-  const newItem = {
-    id: crypto.randomUUID(),
-    name: name,
-    createdAt: Date.now(),
-    amount: +amount,
-    color: generateRandomColor()
+// Function to create a budget (POST request)
+export const createBudget = async ({ name, amount, userId }) => {
+  try {
+    const budgetData = { name, amount, userId };
+    const response = await axios.post(`${API_URL}/create-budget`, budgetData);
+    return response.data; // Returns success message from the server
+  } catch (error) {
+    console.error("Error creating budget:", error);
+    throw error;
   }
-  const existingBudgets = fetchData('budgets') ?? [];
-  return localStorage.setItem('budgets', JSON.stringify([...existingBudgets, newItem]))
+};
+
+// Function to create a user (POST request)
+export const createUser = async (userName) => {
+  try {
+    const response = await axios.post(`${API_URL}/create-user`, { userName });
+    return response.data; // { message: 'User created successfully', userId }
+  } catch (error) {
+    console.error("Error creating user:", error);
+    throw error;
+  }
+};
+
+// Function to generate a random color (used for budget color)
+const generateRandomColor = () => {
+  return `${Math.floor(Math.random() * 360)} 65% 50%`;
 }
 
-export const waait = () => new Promise(res => setTimeout (res, Math.random() * 800))
+// Function to delete an item from the local storage (just an example, not used in the new setup)
+export const deleteItem = (key) => {
+  return localStorage.removeItem(key);
+}
+
+// Mock "wait" function (for some delay)
+export const waait = () => new Promise(res => setTimeout(res, Math.random() * 800));
