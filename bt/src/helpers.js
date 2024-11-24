@@ -6,7 +6,7 @@ const API_URL = 'http://localhost:8080/api';
 // Function to fetch data (GET request)
 export const fetchData = async (url) => {
   try {
-    const response = await axios.get(`${API_URL}${url}`);
+    const response = await axios.get(`${API_URL}/${url}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -30,6 +30,7 @@ export const createBudget = async ({ name, amount, userId }) => {
 export const createUser = async (userName) => {
   try {
     const response = await axios.post(`${API_URL}/create-user`, { userName });
+    localStorage.setItem('userName', userName);
     return response.data; // { message: 'User created successfully', userId }
   } catch (error) {
     console.error("Error creating user:", error);

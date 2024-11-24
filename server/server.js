@@ -1,8 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2");
-const dotenv = require("dotenv");
-dotenv.config();
+
 
 // Create express app
 const app = express();
@@ -16,10 +15,10 @@ app.use(cors(corsOptions));
 
 // Create MySQL connection
 const db = mysql.createConnection({
-  host: process.env.DB_HOST, 
-  user: process.env.DB_USER, 
-  password: process.env.DB_PASSWORD, 
-  database: process.env.DB_NAME, 
+    host: "localhost",
+    user: "root",
+    password: "password",
+    database: "budgetingdb",
 });
 
 // Connect to MySQL
@@ -32,6 +31,7 @@ db.connect((err) => {
 });
 
 // Routes
+
 
 // Create User
 app.post("/api/create-user", (req, res) => {

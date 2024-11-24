@@ -40,14 +40,19 @@ function App() {
 
   // Fetch initial API data
   const fetchAPI = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/api");
-      setBackendMessage(response.data); // Example: Show the "Hello" message from backend
-    } catch (error) {
-      console.error("Error fetching backend data:", error);
-    }
-  };
+    const userId = localStorage.getItem("userId"); // Assuming you're storing userId in localStorage
+  if (!userId) {
+    console.error("No user ID found in localStorage.");
+    return;
+  }
 
+  try {
+    const response = await axios.get(`http://localhost:8080/api/budgets/${userId}`);
+    setBackendMessage(`You have ${response.data.length} budgets.`); // Adjust as needed
+  } catch (error) {
+    console.error("Error fetching backend data:", error);
+  }
+  }
   useEffect(() => {
     fetchAPI();
   }, []);
