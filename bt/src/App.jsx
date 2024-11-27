@@ -61,8 +61,7 @@ function App() {
     <div className="App">
       <RouterProvider router={router} />
       <ToastContainer />
-      {/* Example: Display backend message */}
-      {backendMessage && <p>Backend says: {backendMessage}</p>}
+      
     </div>
   );
 }

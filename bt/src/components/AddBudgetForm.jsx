@@ -15,18 +15,24 @@ const AddBudgetForm = ({ onBudgetCreate }) => {
   };
 
   return (
+  <div className='form-wrapper'>
+   <h2 className='h3'>Create a Budget</h2>
     <form onSubmit={handleSubmit}>
-      <h2>Create a Budget</h2>
-      <div>
+      
+      <div className='grid-xs'>
         <label>Name</label>
         <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
       </div>
-      <div>
+      <div className='grid-xs'>
         <label>Amount</label>
         <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} required />
       </div>
-      <button type="submit">Create Budget</button>
+      <input type="hidden" name="_action" value="createBudget" />
+      <button className='btn btn--dark' type="submit">Create Budget</button>
     </form>
+  </div>
+    
+    
   );
 };
 

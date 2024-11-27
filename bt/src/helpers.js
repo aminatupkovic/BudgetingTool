@@ -26,6 +26,17 @@ export const createBudget = async ({ name, amount, userId }) => {
   }
 };
 
+export const createExpense = async ({ name, amount, budget_id, user_id }) => {
+  try {
+    const expenseData = { name, amount, budget_id, user_id };
+    const response = await axios.post(`${API_URL}/create-expense`, expenseData);
+    return response; // Returns success message from the server
+  } catch (error) {
+    console.error("Error creating expense:", error);
+    throw error;
+  }
+};
+
 // Function to create a user (POST request)
 export const createUser = async (userName) => {
   try {

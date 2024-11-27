@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2");
 
+const PORT = process.env.PORT || 8080;
+
 
 // Create express app
 const app = express();
@@ -53,6 +55,19 @@ app.post("/api/create-budget", (req, res) => {
   });
 });
 
+// In your server.js or equivalent entry file for your backend
+
+app.post("/api/create-expense", (req, res) => {
+    const { name, amount, budget_id, user_id} = req.body; // Ensure that the form data is being sent
+    const query = "INSERT INTO expenses (name, amount, budget_id, user_id) VALUES (?, ?, ?, ?)";
+    db.query(query, [name, amount, budget_id, user_id], (err) => {
+      if (err) return res.status(500).send(err);
+      res.status(200).json({ message: "Expense created successfully" });
+    });
+  });
+  
+  
+
 // Get User's Budgets
 app.get("/api/budgets/:userId", (req, res) => {
   const { userId } = req.params;
@@ -63,6 +78,7 @@ app.get("/api/budgets/:userId", (req, res) => {
   });
 });
 
-app.listen(8080, () => {
+
+app.listen(PORT, () => {
   console.log("Server started on port 8080");
 });

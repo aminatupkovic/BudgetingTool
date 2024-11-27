@@ -1,4 +1,4 @@
-/* ⚠️ CSS optimized for the tutorial, not for expanding to a larger site. ⚠️ */
+
 
 *,
 *::before,
@@ -287,7 +287,7 @@ p {
 
 main {
   max-width: 1500px;
-  width: 100%;
+  
   padding: var(--space-md) var(--space-md) var(--space-xl);
   margin-inline: auto;
   display: -ms-grid;
@@ -436,7 +436,8 @@ select {
   content: "";
   position: absolute;
   inset: 0.55rem;
-  border: 2px dashed hsl(var(--text));
+  border: 2px solid;
+  border-color: aqua;
   border-radius: calc(var(--round-lg) * 0.6);
   z-index: -1;
 }

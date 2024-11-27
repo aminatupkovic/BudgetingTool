@@ -5,7 +5,10 @@ import axios from "axios";
 import Intro from "../components/Intro";
 import { toast } from "react-toastify";
 import AddBudgetForm from "../components/AddBudgetForm";
+import AddExpenseForm from "../components/AddExpenseForm";
 import { createBudget } from "../helpers";
+import { createExpense } from "../helpers";
+import BudgetItem from "../components/BudgetItem";
 
 // Loader
 export async function dashboardLoader() {
@@ -59,11 +62,49 @@ export async function dashboardAction({ request }) {
       throw new Error("There was a problem creating your budget");
     }
   }
+
+  if (_action === 'createExpense') {
+    const userId = localStorage.getItem("userId");
+    if (!userId) throw new Error("User not logged in!");
+  
+    // Extract the values from the form
+    const expenseName = values.newExpense;
+    const expenseAmount = values.newExpenseAmount;
+    const budgetId = values.newExpenseBudget; // Assuming this is coming from the form
+    
+    // Validate input
+    if (!expenseName || !expenseAmount || !budgetId) {
+      throw new Error("All fields are required!");
+    }
+  
+    try {
+      const response = await axios.post("http://localhost:8080/api/create-expense", {
+        name: expenseName,
+        amount: expenseAmount,
+        budget_id: budgetId, // Attach the budget ID to the expense
+        user_id: userId, // Attach the userId to the expense
+
+        
+      });
+  
+      if (response.status === 200) {
+        toast.success("Expense created successfully");
+        return null;
+      }
+      else {
+        throw new Error("Failed to create expense");
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error("There was a problem creating your expense");
+    }
+  }
 }
 
 const Dashboard = () => {
-  const { userName, budgets: initialBudgets } = useLoaderData();
+  const { userName, budgets: initialBudgets, expenses: initialExpenses } = useLoaderData();
   const [budgets, setBudgets] = useState(initialBudgets || []);
+  const [expenses, setExpenses] = useState(initialExpenses || []);
   const [loading, setLoading] = useState(false);
 
   // Fetch user budgets from the backend
@@ -109,29 +150,54 @@ const Dashboard = () => {
     }
   };
 
+  const handleExpenseCreate = async (newExpense) => {
+    try {
+      const response = await createExpense(newExpense);
+        setExpenses((prev) => [...prev, { ...newExpense, id: response.data.id}]);
+        toast.success("Expense created successfully");
+    }
+     catch (error) {
+      console.error("Failed to create expense:", error);
+      toast.error("There was an issue creating the expense");
+    
+  };
+  }
   return (
     <div>
     {userName ? (
       <div className="dashboard">
-        <h1>Welcome, <span className="accent">{userName}</span></h1>
+        <h1>Welcome to <span style={{color: "aqua"}}>Fin</span>
+        <span style={{color:"#EDBF03"}}>Sight</span>
+         
+          </h1>
         <div className="grid-sm">
           {loading ? (
             <p>Loading budgets...</p>
           ) : (
-            <div>
+            <div className="grid-sm">
+              
               <AddBudgetForm onBudgetCreate={handleBudgetCreate} />
               {budgets.length > 0 ? (
                 budgets.map((budget) => (
                   <div key={budget.id}>
-                    <h3>{budget.name}</h3>
-                    <p>Amount: ${budget.amount}</p>
+                    
                   </div>
                 ))
               ) : (
                 <p>No budgets yet! Add one now!</p>
               )}
+              <AddExpenseForm budgets={budgets} onExpenseCreate={handleExpenseCreate} />
             </div>
+            
           )}
+          <h2>Existing Budgets:</h2>
+          <div className="budgets">
+            {
+              budgets.map((budget) => (
+                <BudgetItem key={budget.id} budget={budget} />
+              ))
+            }
+          </div>
         </div>
       </div>
     ) : (
